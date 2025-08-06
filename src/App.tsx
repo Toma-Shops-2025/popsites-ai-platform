@@ -10,6 +10,7 @@ import TemplateGallery from '@/pages/TemplateGallery';
 import TemplateEditor from '@/pages/TemplateEditor';
 import Features from '@/pages/Features';
 import GetStarted from '@/pages/GetStarted';
+import StartBuilding from '@/pages/StartBuilding';
 import AIAssistant from '@/pages/AIAssistant';
 import AIComprehensivePlatform from '@/pages/AIComprehensivePlatform';
 import Dashboard from '@/pages/Dashboard';
@@ -40,6 +41,7 @@ function App() {
                   <Route path="/verify-email" element={<VerifyEmail />} />
                   <Route path="/features" element={<Features />} />
                   <Route path="/get-started" element={<GetStarted />} />
+                  <Route path="/start-building" element={<StartBuilding />} />
                   <Route path="/choose-plan" element={<ChoosePlan />} />
                   
                   {/* Protected routes */}
