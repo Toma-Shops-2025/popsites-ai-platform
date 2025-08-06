@@ -39,8 +39,12 @@ const SignUp: React.FC = () => {
     formState: { errors },
     setError,
     watch,
+    setValue,
   } = useForm<SignUpForm>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      acceptTerms: false,
+    },
   });
 
   const onSubmit = async (data: SignUpForm) => {
@@ -196,7 +200,10 @@ const SignUp: React.FC = () => {
               <div className="flex items-start space-x-2">
                 <Checkbox
                   id="acceptTerms"
-                  {...register('acceptTerms')}
+                  checked={watch('acceptTerms')}
+                  onCheckedChange={(checked) => {
+                    setValue('acceptTerms', checked === true);
+                  }}
                   className="mt-1"
                 />
                 <div className="grid gap-1.5 leading-none">
