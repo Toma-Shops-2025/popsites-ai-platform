@@ -15,6 +15,7 @@ import AIComprehensivePlatform from '@/pages/AIComprehensivePlatform';
 import Dashboard from '@/pages/Dashboard';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
+import VerifyEmail from '@/pages/VerifyEmail';
 import ChoosePlan from '@/pages/ChoosePlan';
 import NotFound from '@/pages/NotFound';
 import AIFloatingButton from '@/components/AIAssistant/AIFloatingButton';
@@ -36,6 +37,7 @@ function App() {
                   <Route path="/" element={<Index />} />
                   <Route path="/sign-in" element={<SignIn />} />
                   <Route path="/sign-up" element={<SignUp />} />
+                  <Route path="/verify-email" element={<VerifyEmail />} />
                   <Route path="/features" element={<Features />} />
                   <Route path="/get-started" element={<GetStarted />} />
                   <Route path="/choose-plan" element={<ChoosePlan />} />
