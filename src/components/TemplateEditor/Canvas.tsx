@@ -50,10 +50,12 @@ const Canvas: React.FC<CanvasProps> = ({
 
   const handleDragEnd = (element: Element, info: any) => {
     setIsDragging(false);
-    onUpdateElement(element.id, {
-      x: info.point.x,
-      y: info.point.y
-    });
+    if (info && info.point) {
+      onUpdateElement(element.id, {
+        x: info.point.x,
+        y: info.point.y
+      });
+    }
   };
 
   const renderElement = (element: Element) => {
@@ -98,7 +100,7 @@ const Canvas: React.FC<CanvasProps> = ({
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.8 }}
-        transition={{ duration: 0.2 }}
+        style={{ position: 'absolute', left: element.x, top: element.y }}
       >
         {elementContent}
       </motion.div>
@@ -107,83 +109,134 @@ const Canvas: React.FC<CanvasProps> = ({
 
   const renderElementContent = (element: Element) => {
     switch (element.type) {
-      case 'text':
-        return (
-          <div className="text-black bg-white p-2 rounded min-w-[120px]">
-            {element.content || 'Sample Text'}
-          </div>
-        );
-      case 'button':
-        return (
-          <Button 
-            size="sm" 
-            className="bg-blue-600 hover:bg-blue-700 text-white min-w-[100px]"
-            disabled
-          >
-            {element.content || 'Button'}
-          </Button>
-        );
-      case 'image':
-        return (
-          <div className="bg-gray-200 w-32 h-24 flex items-center justify-center text-gray-600 text-xs border-2 border-dashed border-gray-400 rounded">
-            <div className="text-center">
-              <div className="text-lg mb-1">🖼️</div>
-              <div>Image Placeholder</div>
-            </div>
-          </div>
-        );
       case 'heading':
         return (
-          <h2 className="text-2xl font-bold text-black bg-white p-2 rounded min-w-[150px]">
+          <h2 className="text-2xl font-bold text-gray-800 m-0">
             {element.content || 'Heading'}
           </h2>
         );
       case 'paragraph':
         return (
-          <p className="text-black bg-white p-2 rounded min-w-[200px] max-w-[300px]">
-            {element.content || 'This is a sample paragraph text that demonstrates how content will look in your design.'}
+          <p className="text-gray-600 m-0 leading-relaxed">
+            {element.content || 'This is a sample paragraph. Add your content here.'}
           </p>
+        );
+      case 'button':
+        return (
+          <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+            {element.content || 'Button'}
+          </button>
+        );
+      case 'image':
+        return (
+          <div className="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center">
+            <span className="text-gray-500">Image Placeholder</span>
+          </div>
         );
       case 'card':
         return (
-          <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm min-w-[200px]">
-            <h3 className="font-semibold text-gray-900 mb-2">Card Title</h3>
-            <p className="text-gray-600 text-sm">{element.content || 'Card content goes here'}</p>
+          <Card className="p-4 w-full">
+            <h3 className="font-semibold text-lg mb-2">
+              {element.content || 'Card Title'}
+            </h3>
+            <p className="text-gray-600 text-sm">
+              This is a sample card content. You can customize this with your own text and styling.
+            </p>
+          </Card>
+        );
+      case 'form':
+        return (
+          <div className="space-y-3 w-full">
+            <input 
+              type="text" 
+              placeholder="Name" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            />
+            <input 
+              type="email" 
+              placeholder="Email" 
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+            />
+            <button className="w-full bg-blue-500 text-white py-2 rounded-lg">
+              Submit
+            </button>
+          </div>
+        );
+      case 'video':
+        return (
+          <div className="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center">
+            <span className="text-gray-500">Video Placeholder</span>
+          </div>
+        );
+      case 'gallery':
+        return (
+          <div className="grid grid-cols-2 gap-2 w-full">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-16 bg-gray-200 rounded flex items-center justify-center">
+                <span className="text-gray-500 text-xs">Image {i}</span>
+              </div>
+            ))}
+          </div>
+        );
+      case 'section':
+        return (
+          <div className="w-full p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-semibold mb-2">Section Title</h3>
+            <p className="text-gray-600 text-sm">
+              This is a section container. You can add multiple elements inside.
+            </p>
+          </div>
+        );
+      case 'map':
+        return (
+          <div className="w-full h-32 bg-gray-200 rounded-lg flex items-center justify-center">
+            <span className="text-gray-500">Map Placeholder</span>
+          </div>
+        );
+      case 'slider':
+        return (
+          <div className="w-full h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+            <span className="text-gray-500">Slider Placeholder</span>
           </div>
         );
       default:
         return (
-          <div className="text-black bg-white p-2 rounded min-w-[100px]">
-            {element.type}
+          <div className="text-gray-600">
+            {element.content || 'Element'}
           </div>
         );
     }
   };
 
   return (
-    <Card className="bg-white/5 backdrop-blur-md border-white/20 h-[600px] relative overflow-hidden">
-      <div 
-        ref={canvasRef}
-        className="absolute inset-0 p-4 bg-gray-50"
-        onClick={handleCanvasClick}
-        style={{ 
-          backgroundImage: 'radial-gradient(circle at 20px 20px, #e5e7eb 1px, transparent 0)',
-          backgroundSize: '40px 40px'
-        }}
-      >
-        {elements.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🎨</div>
-              <p className="text-gray-500 text-lg mb-2">Start Building Your Website</p>
-              <p className="text-gray-400">Drag elements from the toolbar to begin designing</p>
-            </div>
+    <div 
+      ref={canvasRef}
+      className="relative w-full h-full min-h-[600px] bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden"
+      onClick={handleCanvasClick}
+      style={{
+        backgroundImage: `
+          linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
+        `,
+        backgroundSize: '20px 20px'
+      }}
+    >
+      {elements.length === 0 ? (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-6xl mb-4">🎨</div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              Start Designing
+            </h3>
+            <p className="text-gray-500">
+              Drag elements from the toolbar to start building your website
+            </p>
           </div>
-        ) : (
-          elements.map(renderElement)
-        )}
-      </div>
-    </Card>
+        </div>
+      ) : (
+        elements.map(renderElement)
+      )}
+    </div>
   );
 };
 
@@ -193,35 +246,41 @@ const ElementControls: React.FC<{
   onUpdateElement: (id: string, updates: Partial<Element>) => void;
   isSelected: boolean;
 }> = ({ element, onDelete, onUpdateElement, isSelected }) => (
-  <div className={`absolute -top-10 right-0 transition-opacity flex gap-1 ${
+  <div className={`absolute -top-8 right-0 flex gap-1 transition-opacity ${
     isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
   }`}>
-    <Button 
-      size="sm" 
-      variant="outline" 
-      className="h-7 w-7 p-0 bg-white border-gray-300 hover:bg-gray-50"
-      onClick={() => onUpdateElement(element.id, { content: prompt('Edit content:', element.content) || element.content })}
-    >
-      <Edit className="w-3 h-3" />
-    </Button>
-    <Button 
-      size="sm" 
-      variant="outline" 
-      className="h-7 w-7 p-0 bg-white border-gray-300 hover:bg-gray-50"
-      onClick={() => {
-        const newElement = { ...element, id: Date.now().toString(), x: element.x + 20, y: element.y + 20 };
-        // This would need to be handled by the parent component
+    <Button
+      size="sm"
+      variant="secondary"
+      className="h-6 w-6 p-0"
+      onClick={(e) => {
+        e.stopPropagation();
+        onUpdateElement(element.id, { content: 'Updated content' });
       }}
     >
-      <Copy className="w-3 h-3" />
+      <Edit className="h-3 w-3" />
     </Button>
-    <Button 
-      size="sm" 
-      variant="destructive" 
-      className="h-7 w-7 p-0 text-white" 
-      onClick={() => onDelete(element.id)}
+    <Button
+      size="sm"
+      variant="secondary"
+      className="h-6 w-6 p-0"
+      onClick={(e) => {
+        e.stopPropagation();
+        // Clone element logic would go here
+      }}
     >
-      <Trash2 className="w-3 h-3" />
+      <Copy className="h-3 w-3" />
+    </Button>
+    <Button
+      size="sm"
+      variant="destructive"
+      className="h-6 w-6 p-0"
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete(element.id);
+      }}
+    >
+      <Trash2 className="h-3 w-3" />
     </Button>
   </div>
 );
